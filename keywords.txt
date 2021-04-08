@@ -1,0 +1,5 @@
+StepMotor		KEYWORD1
+SetSensorHome	KEYWORD2
+moveToHome		KEYWORD2
+moveToZero		KEYWORD2
+moveTo			KEYWORD2
