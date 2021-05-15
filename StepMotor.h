@@ -19,6 +19,7 @@ private:
 	int _step_per_mm;
 	int fastSpeed = 50;
 	int safeSpeed = 200;
+	int aceleracao = 100;
 	unsigned long numbers_step;
 	unsigned long totalPulses;
 	unsigned long totalPulsesReturn;

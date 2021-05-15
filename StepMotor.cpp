@@ -38,15 +38,24 @@ void StepMotor::moveTo(unsigned long distance,bool direction)
 	
 	while(totalPulses > 0)
 	{
-		digitalWrite(_step_pin, HIGH);
-		delayMicroseconds(fastSpeed);
-		digitalWrite(_step_pin, LOW);
-		delayMicroseconds(fastSpeed);		
-		totalPulses -- ;
-		
+		if(aceleracao > 1){
+			digitalWrite(_step_pin, HIGH);
+			delayMicroseconds(safeSpeed);
+			digitalWrite(_step_pin, LOW);
+			delayMicroseconds(safeSpeed);		
+			totalPulses -- ;
+			aceleracao --;
+		}else{
+			digitalWrite(_step_pin, HIGH);
+			delayMicroseconds(fastSpeed);
+			digitalWrite(_step_pin, LOW);
+			delayMicroseconds(fastSpeed);		
+			totalPulses -- ;
+		}
 	}
 	digitalWrite(_dir_pin, LOW);
 	digitalWrite(_enb_pin, HIGH);
+	aceleracao = 100;
 }
 
 int StepMotor::unit_system()
