@@ -17,9 +17,10 @@ private:
 	int unit_system();
 	int lastDistance = 0; //Verificar se é setada uma vez ou resetada sempre que usada
 	int _step_per_mm;
-	int fastSpeed = 50;
+	int fastSpeed = 100;
 	int safeSpeed = 200;
 	int aceleracao = 100;
+	int tempoAceleracao = 5000;
 	unsigned long numbers_step;
 	unsigned long totalPulses;
 	unsigned long totalPulsesReturn;
