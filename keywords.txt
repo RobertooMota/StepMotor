@@ -3,3 +3,5 @@ SetSensorHome	KEYWORD2
 moveToHome		KEYWORD2
 moveToZero		KEYWORD2
 moveTo			KEYWORD2
+enable			KEYWORD2
+onlyMove			KEYWORD2
