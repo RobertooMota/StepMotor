@@ -116,9 +116,23 @@ void StepMotor::moveToZero()
 
 void StepMotor::onlyMove(byte dirMove)
 {
-	digitalWrite(_enb_pin, LOW);
+	if (accSolo > fastSpeed)
+		accSolo--;
 	digitalWrite(_step_pin, HIGH);
-	delayMicroseconds(fastSpeed);
+	delayMicroseconds(accSolo);
 	digitalWrite(_step_pin, LOW);
-	delayMicroseconds(fastSpeed);
+	delayMicroseconds(accSolo);
+}
+
+void StepMotor::enable(bool cond)
+{
+	if (cond)
+	{
+		digitalWrite(_enb_pin, LOW);
+	}
+	else
+	{
+		digitalWrite(_enb_pin, HIGH);
+		accSolo = 5000;
+	}
 }

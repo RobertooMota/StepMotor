@@ -11,6 +11,7 @@ public:
 	void moveToHome();			 //Vai para o home em velocidade baixa o tempo todo
 	void moveToZero();			 //Vai para o Zero rapido e desacelara ao chegar perto
 	void onlyMove(byte dirMove); //se move sem target
+	void enable(bool cond);
 
 private:
 	//Int
@@ -21,6 +22,7 @@ private:
 	int safeSpeed = 200;
 	int aceleracao = 100;
 	int tempoAceleracao = 5000;
+	int accSolo = 5000;
 	unsigned long numbers_step;
 	unsigned long totalPulses;
 	unsigned long totalPulsesReturn;
