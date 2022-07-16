@@ -13,6 +13,7 @@ StepMotor::StepMotor(byte step_pin, byte dir_pin, byte enb_pin, int step_per_mm 
 	_step_per_mm = step_per_mm;
 	_unit = unit;
 
+	velocidade = 30;
 	digitalWrite(_enb_pin, HIGH);
 }
 
@@ -31,24 +32,28 @@ void StepMotor::moveTo(unsigned long distance, bool direction)
 	digitalWrite(_dir_pin, direction);
 	digitalWrite(_enb_pin, LOW);
 
-	//Serial.begin(9600);
-	//Serial.println(totalPulses);
+	Serial.begin(9600);
+	Serial.println(totalPulses);
 
 	while (totalPulses > 0)
 	{
 
-		if (tempoAceleracao > fastSpeed)
-			tempoAceleracao--;
+		if (velocidade != fastSpeed)
+		{
+			if ((millis() - tempAccel) > intervaloAccel)
+			{
+				velocidade--;
+				tempAccel = millis();
+			}
+		}
 		digitalWrite(_step_pin, HIGH);
-		delayMicroseconds(tempoAceleracao);
+		delayMicroseconds(velocidade);
 		digitalWrite(_step_pin, LOW);
-		delayMicroseconds(tempoAceleracao);
+		delayMicroseconds(velocidade);
 		totalPulses--;
 	}
-
 	digitalWrite(_dir_pin, LOW);
 	digitalWrite(_enb_pin, HIGH);
-	tempoAceleracao = 5000;
 }
 
 int StepMotor::unit_system()
@@ -68,25 +73,21 @@ void StepMotor::moveToHome()
 	digitalWrite(_dir_pin, !_direction);
 	digitalWrite(_enb_pin, LOW);
 
-	//Serial.begin(9600);
-	//Serial.print("_sensor = ");
-	//Serial.println (_sensor);
+	// Serial.begin(9600);
+	// Serial.print("_sensor = ");
+	// Serial.println (_sensor);
 
 	while (digitalRead(_sensor) == !0)
 	{
-		if (tempoAceleracao > safeSpeed)
-			tempoAceleracao--;
 		digitalWrite(_step_pin, HIGH);
-		delayMicroseconds(tempoAceleracao);
+		delayMicroseconds(safeSpeed);
 		digitalWrite(_step_pin, LOW);
-		delayMicroseconds(tempoAceleracao);
-		//Serial.println(digitalRead(_sensor));
-		//Caso necessário, colocar delay AQUI
+		// Serial.println(digitalRead(_sensor));
+		// Caso necessário, colocar delay AQUI
 	}
-	//Serial.println("ok!");
+	// Serial.println("ok!");
 	digitalWrite(_dir_pin, LOW);
 	digitalWrite(_enb_pin, HIGH);
-	tempoAceleracao = 5000;
 }
 
 void StepMotor::moveToZero()
@@ -96,7 +97,7 @@ void StepMotor::moveToZero()
 
 	if (_unit == "m")
 	{
-		while ((totalPulsesReturn - _step_per_mm * 1000) > 0)
+		while (((totalPulsesReturn - _step_per_mm * 1000) > 0) && digitalRead(_sensor) == !0)
 		{
 			if (totalPulsesReturn <= 0)
 				break;
@@ -114,25 +115,17 @@ void StepMotor::moveToZero()
 	digitalWrite(_enb_pin, HIGH);
 }
 
-void StepMotor::onlyMove(byte dirMove)
+void StepMotor::setSpeed(int velocidadeMotor)
 {
-	if (accSolo > fastSpeed)
-		accSolo--;
-	digitalWrite(_step_pin, HIGH);
-	delayMicroseconds(accSolo);
-	digitalWrite(_step_pin, LOW);
-	delayMicroseconds(accSolo);
+	velocidade = velocidadeMotor;
 }
 
-void StepMotor::enable(bool cond)
+void StepMotor::onePulse()
 {
-	if (cond)
+	uint32_t millisAnterior;
+	if ((millis() - millisAnterior) > velocidade)
 	{
-		digitalWrite(_enb_pin, LOW);
-	}
-	else
-	{
-		digitalWrite(_enb_pin, HIGH);
-		accSolo = 5000;
+		digitalWrite(_step_pin, !digitalRead(_step_pin));
+		millisAnterior = millis();
 	}
 }
