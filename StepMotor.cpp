@@ -122,10 +122,5 @@ void StepMotor::setSpeed(int velocidadeMotor)
 
 void StepMotor::onePulse()
 {
-	uint32_t millisAnterior;
-	if ((millis() - millisAnterior) > velocidade)
-	{
-		digitalWrite(_step_pin, !digitalRead(_step_pin));
-		millisAnterior = millis();
-	}
+	digitalWrite(_step_pin, !digitalRead(_step_pin));
 }
